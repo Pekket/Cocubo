@@ -1,0 +1,34 @@
+- name: Add hosts instances to ansible
+  hosts: localhost
+  roles:
+    - host
+#
+#- name: Install java
+#  hosts: instance
+#  become: true
+#  remote_user: ubuntu
+#  gather_facts: false
+#  vars:
+#    ansible_python_interpreter: /usr/bin/python3.6
+#  roles:
+#    - java
+#
+#- name: Install tesseract
+#  hosts: instance
+#  become: true
+#  remote_user: ubuntu
+#  gather_facts: false
+#  vars:
+#    ansible_python_interpreter: /usr/bin/python3.6
+#  roles:
+#    - tesseract
+
+- name: Enable cocubo
+  hosts: instance
+  become: true
+  remote_user: ubuntu
+  gather_facts: false
+  vars:
+    ansible_python_interpreter: /usr/bin/python3.6
+  roles:
+    - cocubo

@@ -1,0 +1,4 @@
+- name: Add instance to ansible hosts
+  add_host:
+    groups: "instance"
+    name: "{{instance_ip}}"

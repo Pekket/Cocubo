@@ -1,0 +1,8 @@
+- name: Update apt
+  become: yes
+  become_user: root
+  apt: update_cache=yes
+
+- name: Install java packages
+  apt:
+    name: openjdk-8-jdk

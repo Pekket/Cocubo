@@ -1,0 +1,7 @@
+- name: Install tesseract packages
+  apt:
+    name: "{{ packages }}"
+  vars:
+    packages:
+      - tesseract-ocr
+      - libtesseract-dev
