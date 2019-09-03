@@ -2,7 +2,6 @@ package be.pekket.cocubo.service.impl;
 
 import be.pekket.cocubo.dto.SlackResponse;
 import be.pekket.cocubo.exception.CocuboException;
-import be.pekket.cocubo.model.Course;
 import be.pekket.cocubo.model.Day;
 import be.pekket.cocubo.model.Menu;
 import be.pekket.cocubo.service.CocuboService;
@@ -37,8 +36,7 @@ public class SlackServiceImpl implements SlackService {
                     Day day = menu.getDay(dayIndex);
                     String dayStr = TimeUtil.getDay() - 1 == dayIndex ? TODAY : TimeUtil.getDayName(dayIndex);
                     if ( day.isOpen() ) {
-                        Course soup = day.getSoup();
-                        slackResponse = new SlackResponse(createSoupMessage(dayStr, soup.getName()));
+                        slackResponse = createMenuSlackResponse(dayStr, day);
                     } else {
                         slackResponse = new SlackResponse(createClosedMessage());
                     }
@@ -49,6 +47,19 @@ public class SlackServiceImpl implements SlackService {
             }
         } catch ( CocuboException e ) {
             slackResponse = new SlackResponse(createErrorMessage());
+        }
+        return slackResponse;
+    }
+
+    private SlackResponse createMenuSlackResponse( String dayStr, Day day ) {
+        SlackResponse slackResponse = new SlackResponse(createErrorMessage());
+        if ( day != null && day.isOpen() && day.isValid() ) {
+            slackResponse = new SlackResponse(createMenuMessage(dayStr));
+
+            slackResponse.addAttachment(createSoupMessage(day.getSoup().getName()));
+            slackResponse.addAttachment(createDishMessage(day.getDish().getName()));
+            slackResponse.addAttachment(createVegiMessage(day.getVegi().getName()));
+            slackResponse.addAttachment(createWppMessage(day.getWpp().getName()));
         }
         return slackResponse;
     }

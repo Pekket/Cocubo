@@ -1,11 +1,25 @@
 package be.pekket.cocubo.util;
 
-import org.springframework.util.StringUtils;
-
 public class MessageUtil {
 
-    public static String createSoupMessage( String dag, String text ) {
-        return "De soep " + dag + " is *" + StringUtils.uncapitalize(text) + "* :stew:";
+    public static String createMenuMessage( String day ) {
+        return "Het menu *" + day + "*";
+    }
+
+    public static String createSoupMessage( String soup ) {
+        return ":stew:   " + soup;
+    }
+
+    public static String createDishMessage( String dish ) {
+        return ":hamburger:   " + dish;
+    }
+
+    public static String createVegiMessage( String vegi ) {
+        return ":green_salad:   " + vegi;
+    }
+
+    public static String createWppMessage( String wpp ) {
+        return ":spaghetti:   " + wpp;
     }
 
     public static String createWeekendMessage() {

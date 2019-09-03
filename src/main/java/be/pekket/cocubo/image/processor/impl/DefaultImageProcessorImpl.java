@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
+import static be.pekket.cocubo.constant.CocuboConstant.MENU_DELIMITER;
 import static be.pekket.cocubo.image.constant.ImageConstant.*;
 
 @Service
@@ -33,9 +34,13 @@ public class DefaultImageProcessorImpl implements ImageProcessor {
             splitIntoSubImages(imageFile);
 
             for ( int i = 0; i < DAYS_TO_PROCESS; i++ ) {
-                File subImage = new File(IMAGE_PREFIX + i + IMAGE_SUFFIX);
-                String processedImageText = readTextFromImage(subImage);
-                result.add(StringUtils.trimTrailingWhitespace(processedImageText));
+                StringBuilder dayMenu = new StringBuilder();
+                for ( String courseName : COURSE_NAMES ) {
+                    File subImage = new File(IMAGE_PREFIX + i + "_" + courseName + IMAGE_SUFFIX);
+                    String processedText = StringUtils.trimWhitespace(readTextFromImage(subImage));
+                    dayMenu.append(processedText).append(MENU_DELIMITER);
+                }
+                result.add(StringUtils.trimTrailingWhitespace(dayMenu.toString()));
             }
         } catch ( IOException e ) {
             throw new ImageProcessingException("Error trying to process image " + e.getMessage());
@@ -47,30 +52,39 @@ public class DefaultImageProcessorImpl implements ImageProcessor {
     private void splitIntoSubImages( File image ) throws IOException {
         final BufferedImage bufferedImage = ImageIO.read(image);
 
-        for ( int i = 0; i < DAY_COORD.length; i++ ) {
+        for ( int i = 0; i < DAYS_TO_PROCESS; i++ ) {
             int x = Integer.parseInt(DAY_COORD[i].split(",")[0]);
             int x2 = Integer.parseInt(DAY_COORD[i].split(",")[1]);
-            BufferedImage subImage = bufferedImage.getSubimage(x, DEFAULT_Y_COORD, x2 - x, HEIGHT);
-            ImageIO.write(subImage, "jpg", new File(IMAGE_PREFIX + i + IMAGE_SUFFIX));
+
+            for ( int j = 0; j < COURSE_NAMES.length; j++ ) {
+                BufferedImage subImage = bufferedImage.getSubimage(x, Y_COORD[j], x2 - x, HEIGHTS[j]);
+                ImageIO.write(subImage, "jpg", new File(IMAGE_PREFIX + i + "_" + COURSE_NAMES[j] + IMAGE_SUFFIX));
+            }
         }
     }
 
     private String readTextFromImage( File imageFile ) throws ImageProcessingException {
+        String result = "";
 
-        String result;
-        try {
-            result = getTesseractInstance().doOCR(imageFile);
-        } catch ( TesseractException e ) {
-            throw new ImageProcessingException("Error trying to convert image to text " + e.getMessage());
+        if ( imageFile != null ) {
+            try {
+                result = getTesseractInstance().doOCR(imageFile);
+                result = StringUtils.replace(result, "\n", " - ");
+            } catch ( TesseractException e ) {
+                throw new ImageProcessingException("Error trying to convert image to text " + e.getMessage());
+            }
         }
-
-        return result;
+        return result.substring(0, result.length() - 3);
     }
 
     private Tesseract getTesseractInstance() {
         if ( this.tesseract == null ) {
             this.tesseract = new Tesseract();
+
+            //Local
             //this.tesseract.setDatapath("/usr/local/Cellar/tesseract/4.1.0/share/tessdata");
+
+            //Remote
             this.tesseract.setDatapath("/usr/share/tesseract-ocr/4.00/tessdata");
             this.tesseract.setLanguage("nld");
         }

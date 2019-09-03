@@ -30,6 +30,7 @@ public class MenuServiceImpl implements MenuService {
 
         try {
             String url = String.format(MENU_URL, year, doubleDiggit(monthNumber - 2), year, doubleDiggit(monthNumber), month, doubleDiggit(weekNumber));
+
             LOG.info("Created url {}", url);
             menuConnector.getMenu(url);
         } catch ( ConnectorException e ) {
