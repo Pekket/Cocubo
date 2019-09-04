@@ -6,4 +6,6 @@ import be.pekket.cocubo.model.Menu;
 public interface CocuboService {
 
     Menu getMenu() throws CocuboException;
+
+    void handleNewMenu();
 }

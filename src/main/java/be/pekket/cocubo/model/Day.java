@@ -1,5 +1,6 @@
 package be.pekket.cocubo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.util.StringUtils;
 
 public class Day {
@@ -57,6 +58,7 @@ public class Day {
         this.wpp = wpp;
     }
 
+    @JsonIgnore
     public boolean isValid() {
         return !StringUtils.isEmpty(soup.getName())
                 && !StringUtils.isEmpty(dish.getName())

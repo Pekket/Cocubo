@@ -45,7 +45,7 @@ public class CocuboServiceImpl implements CocuboService {
         } else if ( currentWeekNumber != menu.getWeekNumber() ) {
             LOG.info("Old menu still exists, fetching new one");
             menu = null;
-            removeJsonFile();
+            removeMenu();
             new Thread(this::handleNewMenu).start();
         }
 
@@ -54,6 +54,7 @@ public class CocuboServiceImpl implements CocuboService {
 
     //Every monday at 9h30
     @Scheduled(cron = "0 30 9 ? * MON")
+    @Override
     public void handleNewMenu() {
         LOG.debug("About to handle new menu");
 
@@ -73,9 +74,9 @@ public class CocuboServiceImpl implements CocuboService {
         }
     }
 
-    //Every friday at 22h00
-    @Scheduled(cron = "0 0 22 ? * FRI")
-    public void removeJsonFile() {
+    //Every sunday at 23h55
+    @Scheduled(cron = "0 55 23 ? * SUN")
+    public void removeMenu() {
         LOG.debug("About to remove menu json");
         jsonDataRepository.removeData();
     }

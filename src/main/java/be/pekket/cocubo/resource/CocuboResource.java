@@ -2,6 +2,8 @@ package be.pekket.cocubo.resource;
 
 import be.pekket.cocubo.dto.SlackResponse;
 import be.pekket.cocubo.service.SlackService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("cocubo")
 public class CocuboResource {
+    private static final Logger LOG = LoggerFactory.getLogger(CocuboResource.class);
 
     private final SlackService slackService;
 

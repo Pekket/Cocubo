@@ -22,6 +22,17 @@ public class MessageUtil {
         return ":spaghetti:   " + wpp;
     }
 
+    public static String createSteakMessage( String steak ) {
+        String message = "De steak van de week is *" + steak + "* :cut_of_meat:";
+
+        double random = (int) (Math.random() * (5 + 1));
+        if ( random == 3 ) {
+            message += "\n\nhttps://media.giphy.com/media/Kbvwy59RTErmo87PtC/giphy.gif";
+        }
+
+        return message;
+    }
+
     public static String createWeekendMessage() {
         return "Its weekend, why u at Corda campus? :thinking_face:";
     }
