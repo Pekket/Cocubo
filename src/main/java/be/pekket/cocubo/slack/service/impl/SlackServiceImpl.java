@@ -1,12 +1,12 @@
 package be.pekket.cocubo.slack.service.impl;
 
-import be.pekket.cocubo.slack.dto.SlackResponse;
 import be.pekket.cocubo.exception.CocuboException;
 import be.pekket.cocubo.model.Day;
 import be.pekket.cocubo.model.Menu;
 import be.pekket.cocubo.service.CocuboService;
-import be.pekket.cocubo.slack.service.SlackService;
 import be.pekket.cocubo.slack.connector.SlackConnector;
+import be.pekket.cocubo.slack.dto.SlackResponse;
+import be.pekket.cocubo.slack.service.SlackService;
 import be.pekket.cocubo.util.NumberUtil;
 import be.pekket.cocubo.util.TimeUtil;
 import org.springframework.stereotype.Service;
@@ -38,31 +38,31 @@ public class SlackServiceImpl implements SlackService {
                     int dayIndex = getDayIndex(parameter);
 
                     if ( dayIndex == 5 || dayIndex == 6 ) {
-                        slackResponse = new SlackResponse(createWeekendMessage());
+                        slackResponse = new SlackResponse(false, createWeekendMessage());
                     } else {
                         Day day = menu.getDay(dayIndex);
                         String dayStr = TimeUtil.getDay() - 1 == dayIndex ? TODAY : TimeUtil.getDayName(dayIndex);
                         if ( day.isOpen() ) {
                             slackResponse = createMenuSlackResponse(dayStr, day);
                         } else {
-                            slackResponse = new SlackResponse(createClosedMessage());
+                            slackResponse = new SlackResponse(false, createClosedMessage());
                         }
                     }
                 }
             } else {
-                slackResponse = new SlackResponse(createErrorMessage());
+                slackResponse = new SlackResponse(false, createErrorMessage());
             }
         } catch ( CocuboException e ) {
-            slackResponse = new SlackResponse(createErrorMessage());
+            slackResponse = new SlackResponse(false, createErrorMessage());
         } finally {
             slackConnector.sendResponse(responseUrl, slackResponse);
         }
     }
 
     private SlackResponse createMenuSlackResponse( String dayStr, Day day ) {
-        SlackResponse slackResponse = new SlackResponse(createErrorMessage());
+        SlackResponse slackResponse = new SlackResponse(false, createErrorMessage());
         if ( day != null && day.isOpen() && day.isValid() ) {
-            slackResponse = new SlackResponse(createMenuMessage(dayStr));
+            slackResponse = new SlackResponse(true, createMenuMessage(dayStr));
 
             slackResponse.addAttachment(createSoupMessage(day.getSoup().getName()));
             slackResponse.addAttachment(createDishMessage(day.getDish().getName()));
@@ -73,11 +73,11 @@ public class SlackServiceImpl implements SlackService {
     }
 
     private SlackResponse createSteakResponse( Menu menu ) {
-        SlackResponse slackResponse = new SlackResponse(createErrorMessage());
+        SlackResponse slackResponse = new SlackResponse(false, createErrorMessage());
 
         Day day = menu.getDay(2);
         if ( day != null && day.getDish() != null )
-            slackResponse = new SlackResponse(createSteakMessage(day.getDish().getName()));
+            slackResponse = new SlackResponse(true, createSteakMessage(day.getDish().getName()));
 
         return slackResponse;
     }

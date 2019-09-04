@@ -34,7 +34,7 @@ public class MessageUtil {
     }
 
     public static String createWeekendMessage() {
-        return "Its weekend, why u at Corda campus? :thinking_face:";
+        return "Its weekend, why u at Corda? :thinking_face:";
     }
 
     public static String createClosedMessage() {

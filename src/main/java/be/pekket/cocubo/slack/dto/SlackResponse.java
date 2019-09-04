@@ -8,16 +8,20 @@ import java.util.List;
 
 public class SlackResponse extends CocuboResponse {
 
-    private String response_type = "in_channel";
+    private String RESPONSE_TYPE_EPHEMERAL = "ephemeral";
+    private String RESPONSE_TYPE_IN_CHANNEL = "in_channel";
+
+    private boolean inChannel;
     private String text;
     private List<SlackAttachment> attachments = new LinkedList<>();
 
-    public SlackResponse( String text ) {
+    public SlackResponse(boolean inChannel, String text ) {
+        this.inChannel = inChannel;
         this.text = text;
     }
 
     public String getResponse_type() {
-        return response_type;
+        return this.inChannel ? RESPONSE_TYPE_IN_CHANNEL : RESPONSE_TYPE_EPHEMERAL;
     }
 
     public String getText() {
