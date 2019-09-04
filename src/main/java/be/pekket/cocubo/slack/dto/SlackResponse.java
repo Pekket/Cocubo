@@ -6,6 +6,8 @@ import org.springframework.util.StringUtils;
 import java.util.LinkedList;
 import java.util.List;
 
+import static be.pekket.cocubo.constant.CocuboConstant.WORLD_CORNER_MATCHER;
+
 public class SlackResponse extends CocuboResponse {
 
     private String RESPONSE_TYPE_EPHEMERAL = "ephemeral";
@@ -15,7 +17,7 @@ public class SlackResponse extends CocuboResponse {
     private String text;
     private List<SlackAttachment> attachments = new LinkedList<>();
 
-    public SlackResponse(boolean inChannel, String text ) {
+    public SlackResponse( boolean inChannel, String text ) {
         this.inChannel = inChannel;
         this.text = text;
     }
@@ -34,7 +36,9 @@ public class SlackResponse extends CocuboResponse {
 
     public void addAttachment( String attachmentString ) {
         if ( !StringUtils.isEmpty(attachmentString) ) {
-            attachments.add(new SlackAttachment(attachmentString));
+            if ( !attachmentString.contains(WORLD_CORNER_MATCHER) ) {
+                attachments.add(new SlackAttachment(attachmentString));
+            }
         }
     }
 }

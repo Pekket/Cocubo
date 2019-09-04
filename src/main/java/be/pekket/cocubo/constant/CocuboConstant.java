@@ -14,4 +14,5 @@ public class CocuboConstant {
     public static final String MENU_DELIMITER = ";";
 
     public static final String STEAK_NAME = "steak";
+    public static final String WORLD_CORNER_MATCHER = "world corner";
 }
