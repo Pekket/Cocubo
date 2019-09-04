@@ -1,10 +1,10 @@
-package be.pekket.cocubo.dto;
+package be.pekket.cocubo.slack.dto;
 
-public class Attachment {
+public class SlackAttachment {
 
     private String text;
 
-    public Attachment( String text ) {
+    public SlackAttachment( String text ) {
         this.text = text;
     }
 

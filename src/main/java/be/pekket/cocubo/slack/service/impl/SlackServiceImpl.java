@@ -1,11 +1,12 @@
-package be.pekket.cocubo.service.impl;
+package be.pekket.cocubo.slack.service.impl;
 
-import be.pekket.cocubo.dto.SlackResponse;
+import be.pekket.cocubo.slack.dto.SlackResponse;
 import be.pekket.cocubo.exception.CocuboException;
 import be.pekket.cocubo.model.Day;
 import be.pekket.cocubo.model.Menu;
 import be.pekket.cocubo.service.CocuboService;
-import be.pekket.cocubo.service.SlackService;
+import be.pekket.cocubo.slack.service.SlackService;
+import be.pekket.cocubo.slack.connector.SlackConnector;
 import be.pekket.cocubo.util.NumberUtil;
 import be.pekket.cocubo.util.TimeUtil;
 import org.springframework.stereotype.Service;
@@ -16,16 +17,17 @@ import static be.pekket.cocubo.util.TimeUtil.TODAY;
 
 @Service
 public class SlackServiceImpl implements SlackService {
-
     private final CocuboService cocuboService;
+    private final SlackConnector slackConnector;
 
-    public SlackServiceImpl( CocuboService cocuboService ) {
+    public SlackServiceImpl( CocuboService cocuboService, SlackConnector slackConnector ) {
         this.cocuboService = cocuboService;
+        this.slackConnector = slackConnector;
     }
 
     @Override
-    public SlackResponse handleSlackRequest( String parameter ) {
-        SlackResponse slackResponse;
+    public void handleSlackRequest( String responseUrl, String parameter ) {
+        SlackResponse slackResponse = null;
         try {
             Menu menu = cocuboService.getMenu();
 
@@ -52,8 +54,9 @@ public class SlackServiceImpl implements SlackService {
             }
         } catch ( CocuboException e ) {
             slackResponse = new SlackResponse(createErrorMessage());
+        } finally {
+            slackConnector.sendResponse(responseUrl, slackResponse);
         }
-        return slackResponse;
     }
 
     private SlackResponse createMenuSlackResponse( String dayStr, Day day ) {

@@ -1,7 +1,6 @@
 package be.pekket.cocubo.resource;
 
-import be.pekket.cocubo.dto.SlackResponse;
-import be.pekket.cocubo.service.SlackService;
+import be.pekket.cocubo.slack.service.SlackService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +24,11 @@ public class CocuboResource {
 
     @PostMapping(
             value = "/slack",
-            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public SlackResponse handleSlack( @RequestParam(name = "text", required = false) String parameter ) {
-        return slackService.handleSlackRequest(parameter);
+            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public void handleSlack(
+            @RequestParam(name = "response_url", required = false) String responseUrl,
+            @RequestParam(name = "text", required = false) String parameter ) {
+        LOG.debug("Received slack post request with response url {} and parameter {}", responseUrl, parameter);
+        slackService.handleSlackRequest(responseUrl, parameter);
     }
 }
