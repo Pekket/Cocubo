@@ -20,14 +20,8 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public void fetch() throws CocuboException {
-//        int year = TimeUtil.getYear();
-//        int weekNumber = TimeUtil.getWeekNumber();
-//        int monthNumber = TimeUtil.getMonth();
-//        String month = TimeUtil.getMonthName();
-
         try {
             String url = menuConnector.getMenuUrl();
-            //String.format(MENU_URL, year, doubleDiggit(monthNumber - 2), year, doubleDiggit(monthNumber), month, doubleDiggit(weekNumber));
 
             if ( url != null && url.contains(TimeUtil.getWeekNumber() + "") ) {
                 LOG.info("Created url {}", url);

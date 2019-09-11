@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -57,7 +58,8 @@ public class MenuConnectorImpl implements MenuConnector {
             LOG.debug("About to download new menu image from {}", url);
             URL website = new URL(url);
             try ( InputStream in = website.openStream() ) {
-                Files.copy(in, Paths.get(MENU_IMAGE_NAME), new StandardCopyOption[]{StandardCopyOption.REPLACE_EXISTING});
+                new File(DATA_PATH).mkdir();
+                Files.copy(in, Paths.get(DATA_PATH + MENU_IMAGE_NAME), new StandardCopyOption[]{StandardCopyOption.REPLACE_EXISTING});
                 LOG.debug("Successfully downloaded new menu image");
             }
         } catch ( IOException e ) {

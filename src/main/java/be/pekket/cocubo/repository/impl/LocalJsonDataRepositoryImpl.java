@@ -7,10 +7,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.FileSystemUtils;
 
 import java.io.File;
 import java.io.IOException;
 
+import static be.pekket.cocubo.constant.CocuboConstant.DATA_PATH;
 import static be.pekket.cocubo.constant.CocuboConstant.MENU_JSON_FILE;
 
 @Repository
@@ -24,7 +26,7 @@ public class LocalJsonDataRepositoryImpl implements JsonDataRepository {
 
         try {
             ObjectMapper mapper = new ObjectMapper();
-            File menuFile = new File(MENU_JSON_FILE);
+            File menuFile = new File(DATA_PATH + MENU_JSON_FILE);
             if ( menuFile.exists() ) {
                 menu = mapper.readValue(menuFile, Menu.class);
                 LOG.debug("Successfully fetched menu data for week {}", menu.getWeekNumber());
@@ -41,7 +43,7 @@ public class LocalJsonDataRepositoryImpl implements JsonDataRepository {
 
         try {
             ObjectMapper mapper = new ObjectMapper();
-            File menuFile = new File(MENU_JSON_FILE);
+            File menuFile = new File(DATA_PATH + MENU_JSON_FILE);
             mapper.writeValue(menuFile, menu);
             LOG.debug("Successfully saved {}", MENU_JSON_FILE);
 
@@ -54,8 +56,8 @@ public class LocalJsonDataRepositoryImpl implements JsonDataRepository {
     public void removeData() {
         LOG.debug("About to delete menu json data");
 
-        File menuFile = new File(MENU_JSON_FILE);
-        if ( menuFile.delete() ) {
+        File dataDir = new File(DATA_PATH);
+        if ( FileSystemUtils.deleteRecursively(dataDir) ) {
             LOG.info("Successfully deleted menu file");
         }
     }

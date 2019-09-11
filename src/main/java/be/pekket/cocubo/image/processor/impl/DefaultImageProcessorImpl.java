@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
+import static be.pekket.cocubo.constant.CocuboConstant.DATA_PATH;
 import static be.pekket.cocubo.constant.CocuboConstant.MENU_DELIMITER;
 import static be.pekket.cocubo.image.constant.ImageConstant.*;
 
@@ -36,7 +37,7 @@ public class DefaultImageProcessorImpl implements ImageProcessor {
             for ( int i = 0; i < DAYS_TO_PROCESS; i++ ) {
                 StringBuilder dayMenu = new StringBuilder();
                 for ( String courseName : COURSE_NAMES ) {
-                    File subImage = new File(IMAGE_PREFIX + i + "_" + courseName + IMAGE_SUFFIX);
+                    File subImage = new File(DATA_PATH + IMAGE_PREFIX + i + "_" + courseName + IMAGE_SUFFIX);
                     String processedText = StringUtils.trimWhitespace(readTextFromImage(subImage));
                     dayMenu.append(processedText).append(MENU_DELIMITER);
                 }
@@ -58,7 +59,7 @@ public class DefaultImageProcessorImpl implements ImageProcessor {
 
             for ( int j = 0; j < COURSE_NAMES.length; j++ ) {
                 BufferedImage subImage = bufferedImage.getSubimage(x, Y_COORD[j], x2 - x, HEIGHTS[j]);
-                ImageIO.write(subImage, "jpg", new File(IMAGE_PREFIX + i + "_" + COURSE_NAMES[j] + IMAGE_SUFFIX));
+                ImageIO.write(subImage, "jpg", new File(DATA_PATH + IMAGE_PREFIX + i + "_" + COURSE_NAMES[j] + IMAGE_SUFFIX));
             }
         }
     }

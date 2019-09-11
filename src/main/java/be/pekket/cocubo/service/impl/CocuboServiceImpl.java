@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static be.pekket.cocubo.constant.CocuboConstant.DATA_PATH;
 import static be.pekket.cocubo.constant.CocuboConstant.MENU_IMAGE_NAME;
 
 @Service
@@ -61,7 +62,7 @@ public class CocuboServiceImpl implements CocuboService {
         try {
             menuService.fetch();
 
-            List<String> menuResults = imageProcessor.process(MENU_IMAGE_NAME);
+            List<String> menuResults = imageProcessor.process(DATA_PATH + MENU_IMAGE_NAME);
             LOG.debug("Found {} menu results", menuResults.size());
 
             Menu menu = menuBuilderService.build(menuResults);
