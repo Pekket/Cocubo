@@ -27,8 +27,12 @@ public class CocuboResource {
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public void handleSlack(
             @RequestParam(name = "response_url", required = false) String responseUrl,
+            @RequestParam(name = "team_domain", required = false) String domain,
+            @RequestParam(name = "channel_name", required = false) String channel,
+            @RequestParam(name = "user_name", required = false) String user,
             @RequestParam(name = "text", required = false) String parameter ) {
         LOG.debug("Received slack post request with response url {} and parameter {}", responseUrl, parameter);
+        LOG.info("Slack request: domain [{}], channel [{}], user [{}]", domain, channel, user);
         slackService.handleSlackRequest(responseUrl, parameter);
     }
 }

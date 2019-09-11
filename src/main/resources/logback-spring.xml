@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-    <property name="LOGS" value="./logs" />
+    <property name="LOGS" value="./logs"/>
 
     <appender name="Console"
               class="ch.qos.logback.core.ConsoleAppender">
@@ -31,14 +31,32 @@
         </rollingPolicy>
     </appender>
 
+    <appender name="CocuboAnalytics"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOGS}/cocubo-analytics.log</file>
+        <append>true</append>
+        <encoder
+                class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>%d %m%n</Pattern>
+        </encoder>
+
+        <rollingPolicy
+                class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOGS}/archived/cocubo-analytics-%d{yyyy-ww}.log</fileNamePattern>
+        </rollingPolicy>
+    </appender>
+
     <root level="info">
-        <appender-ref ref="RollingFile" />
-        <appender-ref ref="Console" />
+        <appender-ref ref="RollingFile"/>
+        <appender-ref ref="Console"/>
     </root>
 
     <logger name="be.pekket" level="debug" additivity="false">
-        <appender-ref ref="RollingFile" />
-        <appender-ref ref="Console" />
+        <appender-ref ref="RollingFile"/>
+        <appender-ref ref="Console"/>
     </logger>
 
+    <logger name="be.pekket.cocubo.resource" level="info" additivity="false">
+        <appender-ref ref="CocuboAnalytics"/>
+    </logger>
 </configuration>
