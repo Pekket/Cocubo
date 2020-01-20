@@ -21,6 +21,7 @@ import static be.pekket.cocubo.image.constant.ImageConstant.*;
 @Service
 public class DefaultImageProcessorImpl implements ImageProcessor {
 
+    private static final String IGNORE_WORLD_CORNER_TEXT = "corner";
     private Tesseract tesseract;
 
     @Override
@@ -39,6 +40,8 @@ public class DefaultImageProcessorImpl implements ImageProcessor {
                 for ( String courseName : COURSE_NAMES ) {
                     File subImage = new File(DATA_PATH + IMAGE_PREFIX + i + "_" + courseName + IMAGE_SUFFIX);
                     String processedText = StringUtils.trimWhitespace(readTextFromImage(subImage));
+
+                    processedText = processedText.toLowerCase().contains(IGNORE_WORLD_CORNER_TEXT) ? "/" : processedText;
                     dayMenu.append(processedText).append(MENU_DELIMITER);
                 }
                 result.add(StringUtils.trimTrailingWhitespace(dayMenu.toString()));
@@ -75,7 +78,7 @@ public class DefaultImageProcessorImpl implements ImageProcessor {
                 throw new ImageProcessingException("Error trying to convert image to text " + e.getMessage());
             }
         }
-        return result.substring(0, result.length() - 3);
+        return StringUtils.isEmpty(result) ? "" : result.substring(0, result.length() - 3);
     }
 
     private Tesseract getTesseractInstance() {
@@ -83,7 +86,7 @@ public class DefaultImageProcessorImpl implements ImageProcessor {
             this.tesseract = new Tesseract();
 
             //Local
-            //this.tesseract.setDatapath("/usr/local/Cellar/tesseract/4.1.0/share/tessdata");
+//            this.tesseract.setDatapath("/usr/local/Cellar/tesseract/4.1.0/share/tessdata");
 
             //Remote
             this.tesseract.setDatapath("/usr/share/tesseract-ocr/4.00/tessdata");

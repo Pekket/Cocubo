@@ -9,9 +9,9 @@
   copy:
     src: "../../../target/cocubo-1.jar"
     dest: "/opt/cocubo/cocubo.jar"
-
-- name: Start spring boot application
-  become: yes
-  shell: 'nohup java -jar /opt/cocubo/cocubo.jar'
-  async: 45
-  poll: 0
+#
+#- name: Start spring boot application
+#  become: yes
+#  shell: 'nohup java -jar /opt/cocubo/cocubo.jar'
+#  async: 45
+#  poll: 0

@@ -1,14 +1,12 @@
 package be.pekket.cocubo.resource;
 
+import be.pekket.cocubo.service.CocuboService;
 import be.pekket.cocubo.slack.service.SlackService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("cocubo")
@@ -16,10 +14,12 @@ public class CocuboResource {
     private static final Logger LOG = LoggerFactory.getLogger(CocuboResource.class);
 
     private final SlackService slackService;
+    private final CocuboService cocuboService;
 
     @Autowired
-    public CocuboResource( SlackService slackService ) {
+    public CocuboResource( SlackService slackService, CocuboService cocuboService ) {
         this.slackService = slackService;
+        this.cocuboService = cocuboService;
     }
 
     @PostMapping(
@@ -34,5 +34,10 @@ public class CocuboResource {
         LOG.debug("Received slack post request with response url {} and parameter {}", responseUrl, parameter);
         LOG.info("Slack request: domain [{}], channel [{}], user [{}]", domain, channel, user);
         slackService.handleSlackRequest(responseUrl, parameter);
+    }
+
+    @GetMapping(value = "/new")
+    public void handleNew() {
+        cocuboService.handleNewMenu();
     }
 }
